@@ -1,4 +1,4 @@
-package com.katie.shla.utils;
+package com.katie.shla.network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

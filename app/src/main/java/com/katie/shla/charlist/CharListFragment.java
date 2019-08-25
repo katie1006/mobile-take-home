@@ -16,7 +16,6 @@ import com.katie.shla.utils.BaseFragment;
 import com.katie.shla.utils.Injector;
 import com.katie.shla.utils.list.ListContract;
 import com.katie.shla.utils.list.ListParentPresenter;
-import com.katie.shla.utils.list.BaseListPresenter;
 
 import java.util.List;
 

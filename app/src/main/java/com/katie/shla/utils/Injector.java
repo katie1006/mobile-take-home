@@ -18,6 +18,7 @@ import com.katie.shla.episode.EpisodeRepo;
 import com.katie.shla.imagecache.ImageCache;
 import com.katie.shla.imagecache.SimpleImageCache;
 import com.katie.shla.network.NetworkInfoProvider;
+import com.katie.shla.network.NetworkInfoProviderImpl;
 import com.katie.shla.network.services.CharacterNetworkService;
 import com.katie.shla.network.tasks.BitmapDownloadTask;
 import com.katie.shla.network.tasks.DownloadTask;
