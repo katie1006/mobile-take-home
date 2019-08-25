@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 
 import com.katie.shla.R;
 import com.katie.shla.data.models.Character;
-import com.katie.shla.utils.list.ListAdapter;
+import com.katie.shla.utils.list.BaseListAdapter;
 import com.katie.shla.utils.list.ListViewHolder;
 
-public class CharListAdapter extends ListAdapter<Character> {
+public class CharListAdapter extends BaseListAdapter<Character> {
     @NonNull
     @Override
     public ListViewHolder<Character> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

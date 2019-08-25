@@ -7,15 +7,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public abstract class ListAdapter<T>
+public abstract class BaseListAdapter<T>
         extends RecyclerView.Adapter<ListViewHolder<T>> implements ListContract.ListView<T> {
 
-    protected ListPresenter<T> presenter = null;
+    protected ListContract.ListPresenter<T> presenter = null;
 
     @Override
-    public void subscribe(ListContract.DetailView<T> detailView) {
-        presenter = new ListPresenter<>();
-        presenter.subscribe(this, detailView);
+    public void subscribe(ListContract.DetailView<T> detailView, ListContract.ListPresenter<T> presenter) {
+        this.presenter = presenter;
+        this.presenter.subscribe(this, detailView);
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.katie.shla.data.models.Episode;
 import com.katie.shla.utils.BaseFragment;
 import com.katie.shla.utils.Injector;
 import com.katie.shla.utils.list.ListContract;
+import com.katie.shla.utils.list.BaseListPresenter;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class EpisodeFragment extends BaseFragment implements ListContract.View<E
         root.setLayoutManager(new LinearLayoutManager(getContext()));
 
         presenter.subscribe(this, Injector.getListRepoEpisode());
-        adapter.subscribe(this);
+        adapter.subscribe(this, Injector.<Episode>getListPresenter());
 
         return root;
     }

@@ -25,6 +25,7 @@ import com.katie.shla.network.tasks.StringDownloadTask;
 import com.katie.shla.network.services.EpisodeNetworkService;
 import com.katie.shla.utils.list.ListContract;
 import com.katie.shla.utils.list.ListParentPresenter;
+import com.katie.shla.utils.list.BaseListPresenter;
 
 public class Injector {
     private static Context appContext = null;
@@ -86,5 +87,9 @@ public class Injector {
 
     public static <T> ListParentPresenter<T> getListParentPresenter() {
         return new ListParentPresenter<>();
+    }
+
+    public static <T> ListContract.ListPresenter<T> getListPresenter() {
+        return new BaseListPresenter<>();
     }
 }

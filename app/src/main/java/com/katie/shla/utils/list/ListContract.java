@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ListContract {
     interface ListView<T> {
-        void subscribe(ListContract.DetailView<T> detailView);
+        void subscribe(ListContract.DetailView<T> detailView, ListPresenter<T> presenter);
         void unsubscribe();
         void updateList(List<T> data);
     }

@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 
 import com.katie.shla.R;
 import com.katie.shla.data.models.Episode;
-import com.katie.shla.utils.list.ListAdapter;
+import com.katie.shla.utils.list.BaseListAdapter;
 import com.katie.shla.utils.list.ListViewHolder;
 
-public class EpisodeListAdapter extends ListAdapter<Episode> {
+public class EpisodeListAdapter extends BaseListAdapter<Episode> {
 
     @NonNull
     @Override

@@ -3,7 +3,7 @@ package com.katie.shla.utils.list;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListPresenter<T> implements ListContract.ListPresenter<T> {
+public class BaseListPresenter<T> implements ListContract.ListPresenter<T> {
 
     protected final ArrayList<T> repo = new ArrayList<>();
     protected ListContract.ListView<T> view;

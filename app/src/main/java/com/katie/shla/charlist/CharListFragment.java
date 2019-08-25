@@ -16,6 +16,7 @@ import com.katie.shla.utils.BaseFragment;
 import com.katie.shla.utils.Injector;
 import com.katie.shla.utils.list.ListContract;
 import com.katie.shla.utils.list.ListParentPresenter;
+import com.katie.shla.utils.list.BaseListPresenter;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class CharListFragment extends BaseFragment implements ListContract.View<
         }
 
         presenter.subscribe(this, Injector.getListRepoCharacter(), urls);
-        adapter.subscribe(this);
+        adapter.subscribe(this, Injector.<Character>getListPresenter());
 
         return root;
     }
