@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Shla</string>
+    <string name="error_msg">Sorry, something went wrong.</string>
 </resources>
