@@ -32,7 +32,7 @@ public class EpisodePresenter implements EpisodeContract.Presenter, EpisodeContr
     }
 
     @Override
-    public void onError(Exception e) {
+    public void onError() {
         if (view != null) {
             view.showError();
         }

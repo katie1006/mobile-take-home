@@ -23,6 +23,6 @@ public interface EpisodeContract {
 
     interface RepoObserver {
         void onDataUpdated(List<Episode> result);
-        void onError(Exception e);
+        void onError();
     }
 }

@@ -1,4 +1,4 @@
-package com.katie.shla.network;
+package com.katie.shla.network.tasks;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 
 import androidx.annotation.Nullable;
 
+import com.katie.shla.network.NetworkInfoProvider;
+import com.katie.shla.utils.AsyncCallback;
+import com.katie.shla.utils.AsyncResult;
 import com.katie.shla.utils.Injector;
 
 import java.io.IOException;
@@ -17,35 +20,15 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Implementation of AsyncTask designed to fetch repo from the network.
  */
-public abstract class DownloadTask<T> extends AsyncTask<String, Integer, DownloadTask.Result<T>> {
+public abstract class DownloadTask<T> extends AsyncTask<String, Integer, AsyncResult<T>> {
 
-    DownloadCallback.NetworkInfoProvider networkInfoProvider = Injector.getNetworkInfoProvider();
+    private NetworkInfoProvider networkInfoProvider;
 
     @Nullable
-    private DownloadCallback<T> callback;
+    private AsyncCallback<T> callback;
 
-    public void setCallback(@Nullable DownloadCallback<T> callback) {
+    public void setCallback(@Nullable AsyncCallback<T> callback) {
         this.callback = callback;
-    }
-
-    /**
-     * Wrapper class that serves as a union of a result value and an exception. When the download
-     * task has completed, either the result value or exception can be a non-null value.
-     * This allows you to pass exceptions to the UI thread that were thrown during doInBackground().
-     */
-    static class Result<T> {
-        @Nullable
-        T resultValue;
-        @Nullable
-        Exception exception;
-
-        Result(@Nullable T resultValue) {
-            this.resultValue = resultValue;
-        }
-
-        void setException(@Nullable Exception exception) {
-            this.exception = exception;
-        }
     }
 
     /**
@@ -53,41 +36,40 @@ public abstract class DownloadTask<T> extends AsyncTask<String, Integer, Downloa
      */
     @Override
     protected void onPreExecute() {
-        if (callback != null) {
-            NetworkInfo networkInfo = networkInfoProvider.getActiveNetworkInfo();
-            if (networkInfo == null || !networkInfo.isConnected() ||
-                    (networkInfo.getType() != ConnectivityManager.TYPE_WIFI
-                            && networkInfo.getType() != ConnectivityManager.TYPE_MOBILE)) {
-                // If no connectivity, cancel task and update Callback with null repo.
-                try {
-                    callback.updateFromDownload(null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                cancel(true);
-            }
+        networkInfoProvider = Injector.getNetworkInfoProvider();
+        if (callback != null && !isConnected()) {
+            // If no connectivity, cancel task and update Callback with null repo.
+            callback.onFinish();
+            cancel(true);
         }
+    }
+
+    private boolean isConnected() {
+        NetworkInfo networkInfo = networkInfoProvider == null ? null : networkInfoProvider.getActiveNetworkInfo();
+        return networkInfo != null &&
+                networkInfo.isConnected() &&
+                (networkInfo.getType() == ConnectivityManager.TYPE_WIFI || networkInfo.getType() == ConnectivityManager.TYPE_MOBILE);
     }
 
     /**
      * Defines work to perform on the background thread.
      */
     @Override
-    protected DownloadTask.Result<T> doInBackground(String... urls) {
-        Result<T> resultWrapper = null;
-        if (!isCancelled() && urls != null && urls.length > 0) {
-            String urlString = urls[0];
+    protected AsyncResult<T> doInBackground(String... urls) {
+        AsyncResult<T> resultWrapper = new AsyncResult<>();
+        for (String urlString : urls) {
+            if (isCancelled() || !isConnected()) {
+                break;
+            }
+
             try {
                 URL url = new URL(urlString);
                 T result = downloadUrl(url);
                 if (result != null) {
-                    resultWrapper = new Result<>(result);
-                } else {
-                    throw new IOException("No response received.");
+                    resultWrapper.results.add(result);
                 }
-            } catch(Exception e) {
-                resultWrapper = new Result<>(null);
-                resultWrapper.setException(e);
+            } catch (Exception e) {
+                resultWrapper.exception = e;
             }
         }
         return resultWrapper;
@@ -97,26 +79,26 @@ public abstract class DownloadTask<T> extends AsyncTask<String, Integer, Downloa
      * Updates the DownloadCallback with the result.
      */
     @Override
-    protected void onPostExecute(Result<T> result) {
-        if (result != null && callback != null) {
-            if (result.exception != null) {
-                callback.onError(result.exception);
-            } else if (result.resultValue != null) {
+    protected void onPostExecute(AsyncResult<T> result) {
+        if (callback != null) {
+            if (result.results.isEmpty()) {
+                callback.onError();
+            } else {
                 try {
-                    callback.updateFromDownload(result.resultValue);
+                    callback.onResult(result.results);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            callback.finishDownloading();
+            callback.onFinish();
         }
     }
 
-    /**
-     * Override to add special behavior for cancelled AsyncTask.
-     */
     @Override
-    protected void onCancelled(Result result) {
+    protected void onCancelled() {
+        super.onCancelled();
+        callback = null;
+        networkInfoProvider = null;
     }
 
     /**
@@ -141,14 +123,12 @@ public abstract class DownloadTask<T> extends AsyncTask<String, Integer, Downloa
             connection.setDoInput(true);
             // Open communications link (network traffic occurs here).
             connection.connect();
-            publishProgress(DownloadCallback.Progress.CONNECT_SUCCESS);
             int responseCode = connection.getResponseCode();
             if (responseCode != HttpsURLConnection.HTTP_OK) {
                 throw new IOException("HTTP error code: " + responseCode);
             }
             // Retrieve the response body as an InputStream.
             stream = connection.getInputStream();
-            publishProgress(DownloadCallback.Progress.GET_INPUT_STREAM_SUCCESS, 0);
             if (stream != null) {
                 result = processInputStream(stream);
             }

@@ -6,9 +6,9 @@ import android.net.NetworkInfo;
 
 import androidx.annotation.Nullable;
 
-import com.katie.shla.network.DownloadCallback;
+import com.katie.shla.network.NetworkInfoProvider;
 
-public class NetworkInfoProviderImpl implements DownloadCallback.NetworkInfoProvider {
+public class NetworkInfoProviderImpl implements NetworkInfoProvider {
 
     private Context appContext;
 

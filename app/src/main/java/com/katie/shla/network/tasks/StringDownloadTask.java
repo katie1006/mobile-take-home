@@ -1,4 +1,4 @@
-package com.katie.shla.network;
+package com.katie.shla.network.tasks;
 
 import androidx.annotation.Nullable;
 

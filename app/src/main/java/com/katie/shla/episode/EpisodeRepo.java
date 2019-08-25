@@ -1,14 +1,14 @@
 package com.katie.shla.episode;
 
 import com.katie.shla.data.models.Episode;
-import com.katie.shla.network.DownloadCallback;
 import com.katie.shla.network.services.EpisodeNetworkService;
+import com.katie.shla.utils.AsyncCallback;
 import com.katie.shla.utils.Injector;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EpisodeRepo implements DownloadCallback<List<Episode>>, EpisodeContract.Repo {
+public class EpisodeRepo implements AsyncCallback<Episode>, EpisodeContract.Repo {
 
     private final EpisodeNetworkService service = Injector.getEpisodeNetworkService();
     private final ArrayList<EpisodeContract.RepoObserver> observers = new ArrayList<>();
@@ -18,21 +18,21 @@ public class EpisodeRepo implements DownloadCallback<List<Episode>>, EpisodeCont
     }
 
     @Override
-    public void updateFromDownload(List<Episode> result) throws Exception {
+    public void onResult(List<Episode> result) {
         for (EpisodeContract.RepoObserver observer : observers) {
             observer.onDataUpdated(result);
         }
     }
 
     @Override
-    public void onError(Exception e) {
+    public void onError() {
         for (EpisodeContract.RepoObserver observer : observers) {
-            observer.onError(e);
+            observer.onError();
         }
     }
 
     @Override
-    public void finishDownloading() { }
+    public void onFinish() { }
 
     @Override
     public void addObserver(EpisodeContract.RepoObserver observer) {

@@ -1,90 +1,98 @@
 package com.katie.shla.network.services;
 
-import com.katie.shla.data.jsonconverter.JsonConverter;
-import com.katie.shla.data.models.Episode;
-import com.katie.shla.network.DownloadCallback;
-import com.katie.shla.network.DownloadTask;
-import com.katie.shla.utils.Injector;
+import android.os.AsyncTask;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.katie.shla.data.models.Episode;
+import com.katie.shla.data.models.EpisodeResponse;
+import com.katie.shla.data.tasks.ResponseJsonTask;
+import com.katie.shla.network.tasks.DownloadTask;
+import com.katie.shla.utils.AsyncCallback;
+import com.katie.shla.utils.Injector;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EpisodeNetworkService {
-    private final JsonConverter<Episode> jsonConverter = Injector.getEpisodeJsonConverter();
-    private final ArrayList<DownloadCallback<List<Episode>>> callbacks = new ArrayList<>();
-    private final ArrayList<DownloadTask> pendingDownloads = new ArrayList<>();
+
+    private final ArrayList<AsyncCallback<Episode>> callbacks = new ArrayList<>();
+    private final ArrayList<AsyncTask> pendingDownloads = new ArrayList<>();
     // todo: obtain this value from api
     private String nextUrl = "https://rickandmortyapi.com/api/episode";
 
-    public void addCallback(DownloadCallback<List<Episode>> callback) {
+    public void addCallback(AsyncCallback<Episode> callback) {
         callbacks.add(callback);
     }
 
     public void getEpisodes() {
         if (nextUrl == null || nextUrl.isEmpty()) {
-            for (DownloadCallback<List<Episode>> callback : callbacks) {
-                callback.finishDownloading();
+            for (AsyncCallback<Episode> callback : callbacks) {
+                callback.onFinish();
             }
             return;
         }
 
-        final DownloadTask<String> task = Injector.getStringDownloadTask();
-        DownloadCallback<String> downloadCallback = new DownloadCallback<String>() {
+        final DownloadTask<String> downloadTask = Injector.getStringDownloadTask();
+        AsyncCallback<String> downloadCallback = new AsyncCallback<String>() {
             @Override
-            public void updateFromDownload(String result) throws Exception {
-                // exceptions will be caught by try/catch in DownloadTask
-                JSONObject resultJsonObj = new JSONObject(result);
-                JSONArray episodeJsonArray = resultJsonObj.getJSONArray("results");
-                ArrayList<Episode> episodeList = new ArrayList<>();
-                for (int i = 0; i < episodeJsonArray.length(); i++) {
-                    try {
-                        JSONObject episodeJson = episodeJsonArray.getJSONObject(i);
-                        Episode candidate = jsonConverter.getObject(episodeJson);
-                        if (candidate != null) {
-                            episodeList.add(candidate);
+            public void onResult(List<String> downloadResult) {
+                final ResponseJsonTask<EpisodeResponse> parseTask = Injector.getEpisodeResponseParseTask();
+                AsyncCallback<EpisodeResponse> parseCallback = new AsyncCallback<EpisodeResponse>() {
+                    @Override
+                    public void onResult(List<EpisodeResponse> result) {
+                        // notify callbacks about repo
+                        for (AsyncCallback<Episode> callback : callbacks) {
+                            callback.onResult(result.get(0).episodes);
                         }
-                    } catch (Exception e) {
-                        // ignore
+                        nextUrl = result.get(0).nextUrl;
                     }
-                }
 
-                // get next url
-                JSONObject infoObj = resultJsonObj.getJSONObject("info");
-                nextUrl = infoObj.optString("next");
+                    @Override
+                    public void onError() {
+                        notifyCallbackError();
+                    }
 
-                // notify callbacks about repo
-                for (DownloadCallback<List<Episode>> callback : callbacks) {
-                    callback.updateFromDownload(episodeList);
-                }
+                    @Override
+                    public void onFinish() {
+                        notifyCallbackFinish();
+                        pendingDownloads.remove(parseTask);
+                    }
+                };
+                parseTask.setCallback(parseCallback);
+                parseTask.execute(downloadResult.get(0));
             }
 
             @Override
-            public void onError(Exception e) {
-                for (DownloadCallback<List<Episode>> callback : callbacks) {
-                    callback.onError(e);
-                }
+            public void onError() {
+                notifyCallbackError();
             }
 
             @Override
-            public void finishDownloading() {
-                for (DownloadCallback<List<Episode>> callback : callbacks) {
-                    callback.finishDownloading();
-                }
-                pendingDownloads.remove(task);
+            public void onFinish() {
+                // ignore, parsing might not finish yet
+                pendingDownloads.remove(downloadTask);
             }
         };
-        task.setCallback(downloadCallback);
-        task.execute(nextUrl);
-        pendingDownloads.add(task);
+        downloadTask.setCallback(downloadCallback);
+        downloadTask.execute(nextUrl);
+        pendingDownloads.add(downloadTask);
     }
 
     public void disconnect() {
-        for (DownloadTask task : pendingDownloads) {
+        for (AsyncTask task : pendingDownloads) {
             task.cancel(true);
         }
         pendingDownloads.clear();
+    }
+
+    private void notifyCallbackError() {
+        for (AsyncCallback<Episode> callback : callbacks) {
+            callback.onError();
+        }
+    }
+
+    private void notifyCallbackFinish() {
+        for (AsyncCallback<Episode> callback : callbacks) {
+            callback.onFinish();
+        }
     }
 }
