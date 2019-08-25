@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 
 import androidx.annotation.Nullable;
 
+import com.katie.shla.utils.Injector;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -13,9 +15,11 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Implementation of AsyncTask designed to fetch data from the network.
+ * Implementation of AsyncTask designed to fetch repo from the network.
  */
 public abstract class DownloadTask<T> extends AsyncTask<String, Integer, DownloadTask.Result<T>> {
+
+    DownloadCallback.NetworkInfoProvider networkInfoProvider = Injector.getNetworkInfoProvider();
 
     @Nullable
     private DownloadCallback<T> callback;
@@ -50,12 +54,16 @@ public abstract class DownloadTask<T> extends AsyncTask<String, Integer, Downloa
     @Override
     protected void onPreExecute() {
         if (callback != null) {
-            NetworkInfo networkInfo = callback.getActiveNetworkInfo();
+            NetworkInfo networkInfo = networkInfoProvider.getActiveNetworkInfo();
             if (networkInfo == null || !networkInfo.isConnected() ||
                     (networkInfo.getType() != ConnectivityManager.TYPE_WIFI
                             && networkInfo.getType() != ConnectivityManager.TYPE_MOBILE)) {
-                // If no connectivity, cancel task and update Callback with null data.
-                callback.updateFromDownload(null);
+                // If no connectivity, cancel task and update Callback with null repo.
+                try {
+                    callback.updateFromDownload(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 cancel(true);
             }
         }
@@ -94,7 +102,11 @@ public abstract class DownloadTask<T> extends AsyncTask<String, Integer, Downloa
             if (result.exception != null) {
                 callback.onError(result.exception);
             } else if (result.resultValue != null) {
-                callback.updateFromDownload(result.resultValue);
+                try {
+                    callback.updateFromDownload(result.resultValue);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             callback.finishDownloading();
         }

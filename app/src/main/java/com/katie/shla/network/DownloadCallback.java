@@ -13,19 +13,21 @@ public interface DownloadCallback<T> {
         int PROCESS_INPUT_STREAM_SUCCESS = 3;
     }
 
+    interface NetworkInfoProvider {
+        /**
+         * Get the device's active network status in the form of a NetworkInfo object.
+         */
+        @Nullable
+        NetworkInfo getActiveNetworkInfo();
+    }
+
     /**
      * Indicates that the callback handler needs to update its appearance or information based on
      * the result of the task. Expected to be called from the main thread.
      */
-    void updateFromDownload(T result);
+    void updateFromDownload(T result) throws Exception;
 
     void onError(Exception e);
-
-    /**
-     * Get the device's active network status in the form of a NetworkInfo object.
-     */
-    @Nullable
-    NetworkInfo getActiveNetworkInfo();
 
     /**
      * Indicates that the download operation has finished. This method is called even if the

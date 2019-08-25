@@ -29,15 +29,10 @@ public class StringDownloadTask extends DownloadTask<String> {
             throws IOException {
         Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
         char[] rawBuffer = new char[DEFAULT_MAX_READ_SIZE];
-        int maxReadSize = DEFAULT_MAX_READ_SIZE;
         int readSize;
         StringBuilder buffer = new StringBuilder();
-        while (((readSize = reader.read(rawBuffer)) != -1) && maxReadSize > 0) {
-            if (readSize > maxReadSize) {
-                readSize = maxReadSize;
-            }
+        while (((readSize = reader.read(rawBuffer)) != -1)) {
             buffer.append(rawBuffer, 0, readSize);
-            maxReadSize -= readSize;
         }
         return buffer.toString();
     }
