@@ -41,6 +41,10 @@ public class EpisodeFragment extends BaseFragment implements ListContract.View<E
         root.setAdapter(listAdapter);
         root.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        if (navigator != null) {
+            navigator.showLoading();
+        }
+
         presenter.subscribe(this, Injector.getListRepoEpisode());
         adapter.subscribe(this, Injector.<Episode>getListPresenter());
 
