@@ -3,10 +3,10 @@ package com.katie.shla.utils.list;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListPresenter<T> implements ListContract.Presenter<T> {
+public class ListPresenter<T> implements ListContract.ListPresenter<T> {
 
     protected final ArrayList<T> repo = new ArrayList<>();
-    protected ListContract.View<T> view;
+    protected ListContract.ListView<T> view;
     protected ListContract.DetailView<T> detailView;
 
     @Override
@@ -30,7 +30,7 @@ public class ListPresenter<T> implements ListContract.Presenter<T> {
     }
 
     @Override
-    public void subscribe(ListContract.View<T> view, ListContract.DetailView<T> detailView) {
+    public void subscribe(ListContract.ListView<T> view, ListContract.DetailView<T> detailView) {
         this.view = view;
         this.detailView = detailView;
     }

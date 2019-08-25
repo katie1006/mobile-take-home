@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class EpisodeResponseConverter implements JsonConverter<EpisodeResponse> {
+public class EpisodeResponseConverter extends BaseJsonConverter<EpisodeResponse> {
 
     private final JsonConverter<Episode> episodeConverter = Injector.getEpisodeJsonConverter();
 

@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class CharacterConverter implements JsonConverter<Character> {
+public class CharacterConverter extends BaseJsonConverter<Character> {
 
     @Nullable
     @Override

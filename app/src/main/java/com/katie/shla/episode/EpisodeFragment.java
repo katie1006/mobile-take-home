@@ -13,21 +13,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.katie.shla.R;
 import com.katie.shla.data.models.Episode;
 import com.katie.shla.utils.BaseFragment;
+import com.katie.shla.utils.Injector;
 import com.katie.shla.utils.list.ListContract;
 
 import java.util.List;
 
-public class EpisodeFragment extends BaseFragment implements EpisodeContract.View, ListContract.DetailView<Episode> {
+public class EpisodeFragment extends BaseFragment implements ListContract.View<Episode>, ListContract.DetailView<Episode> {
 
     public static final String TAG = "episode_list";
 
-    private EpisodeContract.Presenter presenter;
-    private ListContract.View<Episode> adapter;
+    private ListContract.Presenter<Episode> presenter;
+    private ListContract.ListView<Episode> adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new EpisodePresenter();
+        presenter = Injector.getListParentPresenter();
     }
 
     @Nullable
@@ -35,12 +36,14 @@ public class EpisodeFragment extends BaseFragment implements EpisodeContract.Vie
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         RecyclerView root = (RecyclerView) inflater.inflate(R.layout.fragment_episode, container, false);
 
-        adapter = new EpisodeListAdapter();
-        root.setAdapter((EpisodeListAdapter) adapter);
+        EpisodeListAdapter listAdapter = new EpisodeListAdapter();
+        adapter = listAdapter;
+        root.setAdapter(listAdapter);
         root.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        presenter.subscribe(this);
+        presenter.subscribe(this, Injector.getListRepoEpisode());
         adapter.subscribe(this);
+
         return root;
     }
 
@@ -50,17 +53,17 @@ public class EpisodeFragment extends BaseFragment implements EpisodeContract.Vie
 
         presenter.unsubscribe();
         adapter.unsubscribe();
+        adapter = null;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         presenter = null;
-        adapter = null;
     }
 
     @Override
-    public void showEpisodeList(List<Episode> episodes) {
+    public void showList(List<Episode> episodes) {
         if (navigator != null) {
             navigator.hideLoading();
         }
@@ -70,7 +73,7 @@ public class EpisodeFragment extends BaseFragment implements EpisodeContract.Vie
     @Override
     public void showDetail(Episode data) {
         if (navigator != null) {
-            navigator.showCharacterList(data.id);
+            navigator.showCharacterList(data.charUrls);
         }
     }
 }

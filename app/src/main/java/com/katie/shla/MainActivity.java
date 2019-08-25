@@ -1,6 +1,5 @@
 package com.katie.shla;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
@@ -8,6 +7,7 @@ import android.view.View;
 
 import com.katie.shla.chardetail.CharDetailFragment;
 import com.katie.shla.charlist.CharListFragment;
+import com.katie.shla.data.models.Character;
 import com.katie.shla.episode.EpisodeFragment;
 import com.katie.shla.utils.Injector;
 import com.katie.shla.utils.NavigationProvider;
@@ -44,11 +44,11 @@ public class MainActivity extends FragmentActivity implements NavigationProvider
     }
 
     @Override
-    public void showCharacterList(int episodeId) {
+    public void showCharacterList(String[] urls) {
         CharListFragment charListFrag = new CharListFragment();
         charListFrag.setNavigationProvider(this);
         Bundle bundle = new Bundle();
-        bundle.putInt(CharListFragment.ARG_EPISODE_ID, episodeId);
+        bundle.putStringArray(CharListFragment.ARG_CHAR_URLS, urls);
         charListFrag.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_placeholder, charListFrag, CharListFragment.TAG)
@@ -57,11 +57,11 @@ public class MainActivity extends FragmentActivity implements NavigationProvider
     }
 
     @Override
-    public void showCharacterDetail(int characterId) {
+    public void showCharacterDetail(Character charData) {
         CharDetailFragment charDetailFrag = new CharDetailFragment();
         charDetailFrag.setNavigationProvider(this);
         Bundle bundle = new Bundle();
-        bundle.putInt(CharDetailFragment.ARG_CHARACTER_ID, characterId);
+        bundle.putSerializable(CharDetailFragment.ARG_CHARACTER_DATA, charData);
         charDetailFrag.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_placeholder, charDetailFrag, CharDetailFragment.TAG)

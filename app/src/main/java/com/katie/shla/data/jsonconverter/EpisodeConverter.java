@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class EpisodeConverter implements JsonConverter<Episode> {
+public class EpisodeConverter extends BaseJsonConverter<Episode> {
 
     @Override
     @Nullable

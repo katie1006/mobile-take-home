@@ -7,7 +7,9 @@ import androidx.annotation.Nullable;
 import com.katie.shla.data.jsonconverter.JsonConverter;
 import com.katie.shla.utils.AsyncCallback;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +39,14 @@ public abstract class ResponseJsonTask<T> extends AsyncTask<String, Integer, Lis
         for (String input : strings) {
             if (!isCancelled() && jsonConverter != null) {
                 try {
-                    JSONObject candidateJsonObj = new JSONObject(input);
-                    T candidate = jsonConverter.getObject(candidateJsonObj);
-                    if (candidate != null) {
-                        results.add(candidate);
+                    Object candidateJson = new JSONTokener(input).nextValue();
+                    if (candidateJson instanceof JSONObject) {
+                        T candidate = jsonConverter.getObject((JSONObject) candidateJson);
+                        if (candidate != null) {
+                            results.add(candidate);
+                        }
+                    } else if (candidateJson instanceof JSONArray) {
+                        results.addAll(jsonConverter.getArray((JSONArray) candidateJson));
                     }
                 } catch (Exception e) {
                     // ignore

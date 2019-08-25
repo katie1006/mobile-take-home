@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public abstract class ListAdapter<T>
-        extends RecyclerView.Adapter<ListViewHolder<T>> implements ListContract.View<T> {
+        extends RecyclerView.Adapter<ListViewHolder<T>> implements ListContract.ListView<T> {
 
     protected ListPresenter<T> presenter = null;
 

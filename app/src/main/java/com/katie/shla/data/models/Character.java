@@ -1,6 +1,8 @@
 package com.katie.shla.data.models;
 
-public class Character {
+import java.io.Serializable;
+
+public class Character implements Serializable {
     public enum Status {
         ALIVE,
         DEAD,
