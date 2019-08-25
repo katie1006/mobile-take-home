@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Shla</string>
     <string name="error_msg">Sorry, something went wrong.</string>
+    <string name="num_character">%d characters in this episode</string>
 </resources>
