@@ -16,7 +16,9 @@ import com.katie.shla.data.tasks.EpisodeResponseJsonTask;
 import com.katie.shla.data.tasks.ResponseJsonTask;
 import com.katie.shla.episode.EpisodeRepo;
 import com.katie.shla.imagecache.ImageCache;
+import com.katie.shla.imagecache.ImageRepository;
 import com.katie.shla.imagecache.SimpleImageCache;
+import com.katie.shla.imagecache.SimpleImageRepo;
 import com.katie.shla.network.NetworkInfoProvider;
 import com.katie.shla.network.NetworkInfoProviderImpl;
 import com.katie.shla.network.services.CharacterNetworkService;
@@ -52,6 +54,10 @@ public class Injector {
 
     public static ImageCache getImageCache() {
         return new SimpleImageCache();
+    }
+
+    public static ImageRepository getImageRepo() {
+        return new SimpleImageRepo();
     }
 
     public static NetworkInfoProvider getNetworkInfoProvider() {

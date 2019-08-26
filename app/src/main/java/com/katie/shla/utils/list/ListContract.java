@@ -1,5 +1,7 @@
 package com.katie.shla.utils.list;
 
+import androidx.annotation.Nullable;
+
 import java.util.List;
 
 public interface ListContract {
@@ -24,6 +26,8 @@ public interface ListContract {
         void update(List<T> data);
         void subscribe(ListView<T> view, DetailView<T> detailView);
         void unsubscribe();
+        @Nullable
+        T getDataAt(int position);
     }
 
     interface View<T> {

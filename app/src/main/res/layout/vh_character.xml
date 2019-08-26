@@ -23,7 +23,7 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5"/>
 
-        <ImageView
+        <com.katie.shla.utils.SimpleImageView
             android:id="@+id/avatar"
             android:layout_width="0dp"
             android:layout_height="0dp"

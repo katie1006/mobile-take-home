@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 
 import com.katie.shla.R;
 import com.katie.shla.data.models.Character;
+import com.katie.shla.utils.SimpleImageView;
 import com.katie.shla.utils.list.ListViewHolder;
 
 public class CharacterViewHolder extends ListViewHolder<Character> {
@@ -29,13 +30,15 @@ public class CharacterViewHolder extends ListViewHolder<Character> {
     private final TextView origin;
     private final TextView lastLocation;
 
-    private final ImageView avatar;
+    private final SimpleImageView avatar;
     private String avatarUrl;
 
     private final CharacterBasicInfoViewHolder basicVHFront;
     private final CharacterBasicInfoViewHolder basicVHBack;
 
-    public CharacterViewHolder(@NonNull View root) {
+    private final CharacterContract.ImagePresenter imagePresenter;
+
+    public CharacterViewHolder(@NonNull View root, CharacterContract.ImagePresenter imagePresenter) {
         super(root);
         detail = root.findViewById(R.id.detail_wrapper);
         basic = root.findViewById(R.id.basic_wrapper);
@@ -50,6 +53,8 @@ public class CharacterViewHolder extends ListViewHolder<Character> {
 
         basicVHFront = new CharacterBasicInfoViewHolder(basic);
         basicVHBack = new CharacterBasicInfoViewHolder(detail);
+
+        this.imagePresenter = imagePresenter;
     }
 
     @Override
@@ -68,7 +73,7 @@ public class CharacterViewHolder extends ListViewHolder<Character> {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // todo: load avatar
+                imagePresenter.requestImageLoading(avatar, avatarUrl);
                 flip();
             }
         });

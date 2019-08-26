@@ -1,5 +1,7 @@
 package com.katie.shla.utils.list;
 
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +50,16 @@ public class BaseListPresenter<T> implements ListContract.ListPresenter<T> {
         }
         if (detailView != null) {
             detailView.showDetail(repo.get(position));
+        }
+    }
+
+    @Override
+    @Nullable
+    public T getDataAt(int position) {
+        if (position < 0 || position >= repo.size()) {
+            return null;
+        } else {
+            return repo.get(position);
         }
     }
 }
