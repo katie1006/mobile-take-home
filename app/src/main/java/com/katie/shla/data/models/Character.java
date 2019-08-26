@@ -21,6 +21,8 @@ public class Character implements Serializable {
     public final String[] episodeUrls;
     public final String url;
 
+    public boolean isFlipped = false;
+
     public Character(int id, String name, Status status, String species, String type, String gender, String origin, String location, String imageUrl, String[] episodeUrls, String url) {
         this.id = id;
         this.name = name;

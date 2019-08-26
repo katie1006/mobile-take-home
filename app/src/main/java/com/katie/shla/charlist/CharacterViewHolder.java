@@ -32,11 +32,11 @@ public class CharacterViewHolder extends ListViewHolder<Character> {
 
     private final SimpleImageView avatar;
     private String avatarUrl;
+    private final CharacterContract.ImagePresenter imagePresenter;
 
     private final CharacterBasicInfoViewHolder basicVHFront;
     private final CharacterBasicInfoViewHolder basicVHBack;
-
-    private final CharacterContract.ImagePresenter imagePresenter;
+    private boolean isAnimating = false;
 
     public CharacterViewHolder(@NonNull View root, CharacterContract.ImagePresenter imagePresenter) {
         super(root);
@@ -58,7 +58,7 @@ public class CharacterViewHolder extends ListViewHolder<Character> {
     }
 
     @Override
-    public void bind(Character data) {
+    public void bind(final Character data) {
         basicVHFront.bind(data);
         basicVHBack.bind(data);
 
@@ -70,16 +70,42 @@ public class CharacterViewHolder extends ListViewHolder<Character> {
         origin.setText(data.origin);
         lastLocation.setText(data.location);
 
+        // need to reset ui based on flip status
+        detail.setRotationY(0);
+        basic.setRotationY(0);
+        if (data.isFlipped) {
+            imagePresenter.requestImageLoading(avatar, avatarUrl);
+            detail.setAlpha(1);
+            detail.setVisibility(View.VISIBLE);
+            basic.setVisibility(View.GONE);
+            basic.setAlpha(0);
+        } else {
+            detail.setAlpha(0);
+            detail.setVisibility(View.GONE);
+            basic.setVisibility(View.VISIBLE);
+            basic.setAlpha(1);
+        }
+
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imagePresenter.requestImageLoading(avatar, avatarUrl);
                 flip();
+                data.isFlipped = !data.isFlipped;
+
+                if (data.isFlipped) {
+                    imagePresenter.requestImageLoading(avatar, avatarUrl);
+                }
             }
         });
     }
 
     private void flip() {
+        if (isAnimating) {
+            return;
+        }
+
+        isAnimating = true;
+
         final AnimatorSet outAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(itemView.getContext(), R.animator.card_flip_out);
         final AnimatorSet inAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(itemView.getContext(), R.animator.card_flip_in);
 
@@ -105,6 +131,7 @@ public class CharacterViewHolder extends ListViewHolder<Character> {
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
                     basic.setVisibility(View.GONE);
+                    isAnimating = false;
                 }
             });
             outAnimation.start();
@@ -125,6 +152,7 @@ public class CharacterViewHolder extends ListViewHolder<Character> {
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
                     detail.setVisibility(View.GONE);
+                    isAnimating = false;
                 }
             });
             outAnimation.start();
