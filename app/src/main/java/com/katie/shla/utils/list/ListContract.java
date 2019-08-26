@@ -6,14 +6,10 @@ import java.util.List;
 
 public interface ListContract {
     interface ListView<T> {
-        void subscribe(ListContract.DetailView<T> detailView, ListPresenter<T> presenter);
+        void subscribe(ListPresenter<T> presenter);
         void unsubscribe();
         void updateList(List<T> data);
         void updateItem(int position, T data);
-    }
-
-    interface DetailView<T> {
-        void showDetail(T data);
     }
 
     interface ItemView<T> {
@@ -28,8 +24,10 @@ public interface ListContract {
         void onItemClicked(int position);
         void onItemLongClicked(int position);
         void update(List<T> data);
-        void subscribe(ListView<T> view, DetailView<T> detailView);
+        void subscribeView(ListView<T> view);
+        void subscribeParent(ListContract.Presenter<T> parentPresenter);
         void unsubscribe();
+        void onNextPage();
         @Nullable
         T getDataAt(int position);
     }
@@ -37,11 +35,14 @@ public interface ListContract {
     interface View<T> {
         void showList(List<T> data);
         void showError();
+        void showDetail(T data);
     }
 
     interface Presenter<T> {
         void subscribe(View<T> view, Repo<T> repo, Object... input);
         void unsubscribe();
+        void onDataItemClicked(T data);
+        void requestNextPage();
     }
 
     interface Repo<T> {

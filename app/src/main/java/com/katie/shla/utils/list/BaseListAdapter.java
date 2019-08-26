@@ -13,9 +13,9 @@ public abstract class BaseListAdapter<T>
     protected ListContract.ListPresenter<T> presenter = null;
 
     @Override
-    public void subscribe(ListContract.DetailView<T> detailView, ListContract.ListPresenter<T> presenter) {
+    public void subscribe(ListContract.ListPresenter<T> presenter) {
         this.presenter = presenter;
-        this.presenter.subscribe(this, detailView);
+        this.presenter.subscribeView(this);
     }
 
     @Override
@@ -47,6 +47,10 @@ public abstract class BaseListAdapter<T>
 
         if (presenter != null) {
             presenter.onBindItemView(holder, position);
+        }
+
+        if (position == getItemCount() - 1) {
+            presenter.onNextPage();
         }
     }
 

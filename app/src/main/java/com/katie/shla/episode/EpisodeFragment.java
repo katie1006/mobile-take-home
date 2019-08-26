@@ -18,7 +18,7 @@ import com.katie.shla.utils.list.ListContract;
 
 import java.util.List;
 
-public class EpisodeFragment extends BaseFragment implements ListContract.View<Episode>, ListContract.DetailView<Episode> {
+public class EpisodeFragment extends BaseFragment implements ListContract.View<Episode> {
 
     public static final String TAG = "episode_list";
 
@@ -46,7 +46,9 @@ public class EpisodeFragment extends BaseFragment implements ListContract.View<E
         }
 
         presenter.subscribe(this, Injector.getListRepoEpisode());
-        adapter.subscribe(this, Injector.<Episode>getListPresenter());
+        ListContract.ListPresenter<Episode> listPresenter = new EpisodeListPresenter();
+        listPresenter.subscribeParent(presenter);
+        adapter.subscribe(listPresenter);
 
         return root;
     }

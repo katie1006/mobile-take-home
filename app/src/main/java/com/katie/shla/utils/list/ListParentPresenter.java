@@ -34,4 +34,16 @@ public class ListParentPresenter<T> implements ListContract.Presenter<T>, ListCo
             view.showError();
         }
     }
+
+    @Override
+    public void onDataItemClicked(T data) {
+        if (view != null) {
+            view.showDetail(data);
+        }
+    }
+
+    @Override
+    public void requestNextPage() {
+        repo.requestData();
+    }
 }

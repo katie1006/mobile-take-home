@@ -100,10 +100,6 @@ public class Injector {
         return new ListParentPresenter<>();
     }
 
-    public static <T> ListContract.ListPresenter<T> getListPresenter() {
-        return new BaseListPresenter<>();
-    }
-
     public static CharacterContract.CharacterPool getCharacterPool() {
         if (pool == null) {
             pool = new SimpleCharacterPool();

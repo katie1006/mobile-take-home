@@ -47,10 +47,12 @@ public class CharListFragment extends BaseFragment implements ListContract.View<
             navigator.showLoading();
         }
 
-        new ListParentPresenter<Character>().subscribe(this, Injector.getListRepoCharacter(), urls);
+        ListContract.Presenter<Character> presenter = new ListParentPresenter<>();
+        presenter.subscribe(this, Injector.getListRepoCharacter(), urls);
         CharacterListPresenter listPresenter = new CharacterListPresenter();
         listPresenter.bindRepo(Injector.getCharacterPool());
-        adapter.subscribe(null, listPresenter);
+        listPresenter.subscribeParent(presenter);
+        adapter.subscribe(listPresenter);
 
         return root;
     }
@@ -62,4 +64,7 @@ public class CharListFragment extends BaseFragment implements ListContract.View<
         }
         adapter.updateList(data);
     }
+
+    @Override
+    public void showDetail(Character data) { }
 }

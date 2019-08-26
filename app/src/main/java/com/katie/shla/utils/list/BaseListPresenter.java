@@ -9,7 +9,7 @@ public class BaseListPresenter<T> implements ListContract.ListPresenter<T> {
 
     protected final ArrayList<T> data = new ArrayList<>();
     protected ListContract.ListView<T> view;
-    protected ListContract.DetailView<T> detailView;
+    private ListContract.Presenter<T> parentPresenter;
 
     @Override
     public int getItemCount() {
@@ -41,15 +41,19 @@ public class BaseListPresenter<T> implements ListContract.ListPresenter<T> {
     }
 
     @Override
-    public void subscribe(ListContract.ListView<T> view, ListContract.DetailView<T> detailView) {
+    public void subscribeView(ListContract.ListView<T> view) {
         this.view = view;
-        this.detailView = detailView;
+    }
+
+    @Override
+    public void subscribeParent(ListContract.Presenter<T> parentPresenter) {
+        this.parentPresenter = parentPresenter;
     }
 
     @Override
     public void unsubscribe() {
         view = null;
-        detailView = null;
+        this.parentPresenter = null;
     }
 
     @Override
@@ -57,8 +61,9 @@ public class BaseListPresenter<T> implements ListContract.ListPresenter<T> {
         if (position < 0 || position >= data.size()) {
             return;
         }
-        if (detailView != null) {
-            detailView.showDetail(data.get(position));
+
+        if (parentPresenter != null) {
+            parentPresenter.onDataItemClicked(data.get(position));
         }
     }
 
@@ -72,6 +77,13 @@ public class BaseListPresenter<T> implements ListContract.ListPresenter<T> {
             return null;
         } else {
             return data.get(position);
+        }
+    }
+
+    @Override
+    public void onNextPage() {
+        if (parentPresenter != null) {
+            parentPresenter.requestNextPage();
         }
     }
 }
