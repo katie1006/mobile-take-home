@@ -3,7 +3,9 @@ package com.katie.shla.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.katie.shla.charlist.CharacterContract;
 import com.katie.shla.charlist.CharacterRepo;
+import com.katie.shla.charlist.SimpleCharacterPool;
 import com.katie.shla.data.jsonconverter.CharacterConverter;
 import com.katie.shla.data.jsonconverter.EpisodeConverter;
 import com.katie.shla.data.jsonconverter.EpisodeResponseConverter;
@@ -32,6 +34,8 @@ import com.katie.shla.utils.list.BaseListPresenter;
 
 public class Injector {
     private static Context appContext = null;
+    private static CharacterContract.CharacterPool pool = null;
+
     public static void init(Context context) {
         appContext = context.getApplicationContext();
     }
@@ -98,5 +102,12 @@ public class Injector {
 
     public static <T> ListContract.ListPresenter<T> getListPresenter() {
         return new BaseListPresenter<>();
+    }
+
+    public static CharacterContract.CharacterPool getCharacterPool() {
+        if (pool == null) {
+            pool = new SimpleCharacterPool();
+        }
+        return pool;
     }
 }

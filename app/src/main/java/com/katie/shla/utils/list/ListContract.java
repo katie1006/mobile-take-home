@@ -9,6 +9,7 @@ public interface ListContract {
         void subscribe(ListContract.DetailView<T> detailView, ListPresenter<T> presenter);
         void unsubscribe();
         void updateList(List<T> data);
+        void updateItem(int position, T data);
     }
 
     interface DetailView<T> {
@@ -17,12 +18,15 @@ public interface ListContract {
 
     interface ItemView<T> {
         void bind(T data);
+        void bind(T data, List<Object> payloads);
     }
 
     interface ListPresenter<T> {
         int getItemCount();
         void onBindItemView(ItemView<T> itemView, int position);
+        void onBindItemView(ItemView<T> itemView, int position, List<Object> payloads);
         void onItemClicked(int position);
+        void onItemLongClicked(int position);
         void update(List<T> data);
         void subscribe(ListView<T> view, DetailView<T> detailView);
         void unsubscribe();

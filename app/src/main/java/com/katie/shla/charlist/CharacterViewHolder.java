@@ -9,7 +9,6 @@ import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +17,8 @@ import com.katie.shla.R;
 import com.katie.shla.data.models.Character;
 import com.katie.shla.utils.SimpleImageView;
 import com.katie.shla.utils.list.ListViewHolder;
+
+import java.util.List;
 
 public class CharacterViewHolder extends ListViewHolder<Character> {
 
@@ -97,6 +98,14 @@ public class CharacterViewHolder extends ListViewHolder<Character> {
                 }
             }
         });
+    }
+
+    @Override
+    public void bind(Character data, List<Object> payloads) {
+        if (!payloads.isEmpty() && payloads.get(0) instanceof Character.Status) {
+            basicVHBack.bind(data);
+            basicVHFront.bind(data);
+        }
     }
 
     private void flip() {

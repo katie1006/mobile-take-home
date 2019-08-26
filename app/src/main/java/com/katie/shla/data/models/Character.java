@@ -11,7 +11,7 @@ public class Character implements Serializable {
 
     public final int id;
     public final String name;
-    public final Status status;
+    public Status status;
     public final String species;
     public final String type;
     public final String gender;

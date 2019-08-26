@@ -9,6 +9,8 @@ import com.katie.shla.R;
 import com.katie.shla.data.models.Episode;
 import com.katie.shla.utils.list.ListViewHolder;
 
+import java.util.List;
+
 public class EpisodeViewHolder extends ListViewHolder<Episode> {
 
     private final TextView name;
@@ -31,4 +33,7 @@ public class EpisodeViewHolder extends ListViewHolder<Episode> {
         airDate.setText(data.airDate);
         numCharacters.setText(numCharacters.getResources().getString(R.string.num_character, data.charUrls.length));
     }
+
+    @Override
+    public void bind(Episode data, List<Object> payloads) { }
 }

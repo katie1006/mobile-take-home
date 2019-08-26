@@ -7,28 +7,37 @@ import java.util.List;
 
 public class BaseListPresenter<T> implements ListContract.ListPresenter<T> {
 
-    protected final ArrayList<T> repo = new ArrayList<>();
+    protected final ArrayList<T> data = new ArrayList<>();
     protected ListContract.ListView<T> view;
     protected ListContract.DetailView<T> detailView;
 
     @Override
     public int getItemCount() {
-        return repo.size();
+        return data.size();
     }
 
     @Override
     public void onBindItemView(ListContract.ItemView<T> itemView, int position) {
-        if (position < 0 || position >= repo.size()) {
+        if (position < 0 || position >= data.size()) {
             return;
         }
 
-        itemView.bind(repo.get(position));
+        itemView.bind(data.get(position));
+    }
+
+    @Override
+    public void onBindItemView(ListContract.ItemView<T> itemView, int position, List<Object> payloads) {
+        if (position < 0 || position >= data.size()) {
+            return;
+        }
+
+        itemView.bind(data.get(position), payloads);
     }
 
     @Override
     public void update(List<T> data) {
-        repo.clear();
-        repo.addAll(data);
+        this.data.clear();
+        this.data.addAll(data);
     }
 
     @Override
@@ -45,21 +54,24 @@ public class BaseListPresenter<T> implements ListContract.ListPresenter<T> {
 
     @Override
     public void onItemClicked(int position) {
-        if (position < 0 || position >= repo.size()) {
+        if (position < 0 || position >= data.size()) {
             return;
         }
         if (detailView != null) {
-            detailView.showDetail(repo.get(position));
+            detailView.showDetail(data.get(position));
         }
     }
 
     @Override
+    public void onItemLongClicked(int position) { }
+
+    @Override
     @Nullable
     public T getDataAt(int position) {
-        if (position < 0 || position >= repo.size()) {
+        if (position < 0 || position >= data.size()) {
             return null;
         } else {
-            return repo.get(position);
+            return data.get(position);
         }
     }
 }

@@ -24,14 +24,8 @@ public class CharListFragment extends BaseFragment implements ListContract.View<
     public static final String TAG = "char_list";
     public static final String ARG_CHAR_URLS = "char_urls";
 
-    private ListContract.Presenter<Character> presenter;
     private ListContract.ListView<Character> adapter;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        presenter = new ListParentPresenter<>();
-    }
 
     @Nullable
     @Override
@@ -53,8 +47,10 @@ public class CharListFragment extends BaseFragment implements ListContract.View<
             navigator.showLoading();
         }
 
-        presenter.subscribe(this, Injector.getListRepoCharacter(), urls);
-        adapter.subscribe(null, Injector.<Character>getListPresenter());
+        new ListParentPresenter<Character>().subscribe(this, Injector.getListRepoCharacter(), urls);
+        CharacterListPresenter listPresenter = new CharacterListPresenter();
+        listPresenter.bindRepo(Injector.getCharacterPool());
+        adapter.subscribe(null, listPresenter);
 
         return root;
     }

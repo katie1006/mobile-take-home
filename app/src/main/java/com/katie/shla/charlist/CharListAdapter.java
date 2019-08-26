@@ -26,4 +26,9 @@ public class CharListAdapter extends BaseListAdapter<Character> {
         super.onViewRecycled(holder);
         imagePresenter.cancelImageLoading(presenter.getDataAt(holder.getAdapterPosition()));
     }
+
+    @Override
+    public void updateItem(int position, Character data) {
+        notifyItemChanged(position, data.status);
+    }
 }

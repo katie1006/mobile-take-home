@@ -29,12 +29,32 @@ public abstract class BaseListAdapter<T>
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onItemClicked(position);
+                if (presenter != null) {
+                    presenter.onItemClicked(position);
+                }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (presenter != null) {
+                    presenter.onItemLongClicked(position);
+                }
+                return true;
             }
         });
 
         if (presenter != null) {
             presenter.onBindItemView(holder, position);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ListViewHolder<T> holder, int position, @NonNull List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        if (presenter != null) {
+            presenter.onBindItemView(holder, position, payloads);
         }
     }
 
@@ -47,5 +67,10 @@ public abstract class BaseListAdapter<T>
     public void updateList(List<T> data) {
         presenter.update(data);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateItem(int position, T data) {
+        notifyItemChanged(position);
     }
 }
