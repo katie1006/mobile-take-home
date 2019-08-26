@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="@dimen/vh_margin"
+    android:background="@color/colorAccent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/detail_wrapper"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:alpha="0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"/>
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.9"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintDimensionRatio="1" />
+
+        <include
+            layout="@layout/character_basic"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintEnd_toEndOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintEnd_toEndOf="@id/avatar"
+            android:background="@color/character_bg"/>
+
+        <TextView
+            android:id="@+id/status_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintEnd_toEndOf="@id/center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/avatar"
+            android:layout_margin="15dp"
+            android:textAppearance="@style/GeneralText.Label"
+            android:text="@string/label_status"/>
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/center_vertical"
+            app:layout_constraintEnd_toEndOf="@id/avatar"
+            app:layout_constraintBaseline_toBaselineOf="@id/status_label"
+            android:layout_marginEnd="15dp"
+            android:textAppearance="@style/GeneralText"
+            android:textAlignment="textEnd"
+            android:layout_marginTop="@dimen/character_info_margin_vertical" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/status_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="status_label,status"/>
+
+        <TextView
+            android:id="@+id/species_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/status_label"
+            app:layout_constraintEnd_toEndOf="@id/status_label"
+            app:layout_constraintTop_toBottomOf="@id/status_bottom"
+            android:layout_marginTop="@dimen/character_info_margin_vertical"
+            android:textAppearance="@style/GeneralText.Label"
+            android:text="@string/label_species"/>
+
+        <TextView
+            android:id="@+id/species"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/status"
+            app:layout_constraintEnd_toEndOf="@id/status"
+            app:layout_constraintBaseline_toBaselineOf="@id/species_label"
+            android:textAppearance="@style/GeneralText"
+            android:textAlignment="textEnd"
+            android:layout_marginTop="@dimen/character_info_margin_vertical" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/species_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="species_label,species"/>
+
+        <TextView
+            android:id="@+id/gender_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/status_label"
+            app:layout_constraintEnd_toEndOf="@id/status_label"
+            app:layout_constraintTop_toBottomOf="@id/species_bottom"
+            android:layout_marginTop="@dimen/character_info_margin_vertical"
+            android:textAppearance="@style/GeneralText.Label"
+            android:text="@string/label_gender"/>
+
+        <TextView
+            android:id="@+id/gender"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/status"
+            app:layout_constraintEnd_toEndOf="@id/status"
+            app:layout_constraintBaseline_toBaselineOf="@id/gender_label"
+            android:textAppearance="@style/GeneralText"
+            android:textAlignment="textEnd"
+            android:layout_marginTop="@dimen/character_info_margin_vertical" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/gender_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="gender_label,gender"/>
+
+        <TextView
+            android:id="@+id/origin_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/status_label"
+            app:layout_constraintEnd_toEndOf="@id/status_label"
+            app:layout_constraintTop_toBottomOf="@id/gender_bottom"
+            android:layout_marginTop="@dimen/character_info_margin_vertical"
+            android:textAppearance="@style/GeneralText.Label"
+            android:text="@string/label_origin"/>
+
+        <TextView
+            android:id="@+id/origin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/status"
+            app:layout_constraintEnd_toEndOf="@id/status"
+            app:layout_constraintBaseline_toBaselineOf="@id/origin_label"
+            android:textAppearance="@style/GeneralText"
+            android:textAlignment="textEnd"
+            android:layout_marginTop="@dimen/character_info_margin_vertical" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/origin_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="origin_label,origin"/>
+
+        <TextView
+            android:id="@+id/localtion_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/status_label"
+            app:layout_constraintEnd_toEndOf="@id/status_label"
+            app:layout_constraintTop_toBottomOf="@id/origin_bottom"
+            android:layout_marginTop="@dimen/character_info_margin_vertical"
+            android:textAppearance="@style/GeneralText.Label"
+            android:text="@string/label_location"/>
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/status"
+            app:layout_constraintEnd_toEndOf="@id/status"
+            app:layout_constraintBaseline_toBaselineOf="@id/localtion_label"
+            android:textAppearance="@style/GeneralText"
+            android:textAlignment="textEnd"
+            android:layout_marginTop="@dimen/character_info_margin_vertical" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/basic_wrapper"
+        layout="@layout/character_basic" />
+
+</FrameLayout>

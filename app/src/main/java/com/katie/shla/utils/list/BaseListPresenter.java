@@ -46,6 +46,8 @@ public class BaseListPresenter<T> implements ListContract.ListPresenter<T> {
         if (position < 0 || position >= repo.size()) {
             return;
         }
-        detailView.showDetail(repo.get(position));
+        if (detailView != null) {
+            detailView.showDetail(repo.get(position));
+        }
     }
 }

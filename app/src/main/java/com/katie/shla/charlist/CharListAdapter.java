@@ -15,6 +15,6 @@ public class CharListAdapter extends BaseListAdapter<Character> {
     @Override
     public ListViewHolder<Character> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new CharacterViewHolder(inflater.inflate(R.layout.vh_episode, parent, false));
+        return new CharacterViewHolder(inflater.inflate(R.layout.vh_character, parent, false));
     }
 }

@@ -26,15 +26,16 @@ public abstract class BaseListAdapter<T>
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder<T> holder, final int position) {
-        if (presenter != null) {
-            presenter.onBindItemView(holder, position);
-        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 presenter.onItemClicked(position);
             }
         });
+
+        if (presenter != null) {
+            presenter.onBindItemView(holder, position);
+        }
     }
 
     @Override

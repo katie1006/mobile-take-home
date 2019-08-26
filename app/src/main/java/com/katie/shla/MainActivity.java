@@ -9,11 +9,8 @@ import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.katie.shla.chardetail.CharDetailFragment;
 import com.katie.shla.charlist.CharListFragment;
-import com.katie.shla.data.models.Character;
 import com.katie.shla.episode.EpisodeFragment;
 import com.katie.shla.utils.Injector;
 import com.katie.shla.utils.NavigationProvider;
@@ -63,19 +60,6 @@ public class MainActivity extends FragmentActivity implements NavigationProvider
         charListFrag.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_placeholder, charListFrag, CharListFragment.TAG)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    @Override
-    public void showCharacterDetail(Character charData) {
-        CharDetailFragment charDetailFrag = new CharDetailFragment();
-        charDetailFrag.setNavigationProvider(this);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(CharDetailFragment.ARG_CHARACTER_DATA, charData);
-        charDetailFrag.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_placeholder, charDetailFrag, CharDetailFragment.TAG)
                 .addToBackStack(null)
                 .commit();
     }

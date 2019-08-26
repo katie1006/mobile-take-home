@@ -19,7 +19,7 @@ import com.katie.shla.utils.list.ListParentPresenter;
 
 import java.util.List;
 
-public class CharListFragment extends BaseFragment implements ListContract.View<Character>, ListContract.DetailView<Character> {
+public class CharListFragment extends BaseFragment implements ListContract.View<Character> {
 
     public static final String TAG = "char_list";
     public static final String ARG_CHAR_URLS = "char_urls";
@@ -54,16 +54,9 @@ public class CharListFragment extends BaseFragment implements ListContract.View<
         }
 
         presenter.subscribe(this, Injector.getListRepoCharacter(), urls);
-        adapter.subscribe(this, Injector.<Character>getListPresenter());
+        adapter.subscribe(null, Injector.<Character>getListPresenter());
 
         return root;
-    }
-
-    @Override
-    public void showDetail(Character data) {
-        if (navigator != null) {
-            navigator.showCharacterDetail(data);
-        }
     }
 
     @Override

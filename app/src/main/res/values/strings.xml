@@ -2,4 +2,13 @@
     <string name="app_name">Shla</string>
     <string name="error_msg">Sorry, something went wrong.</string>
     <string name="num_character">%d characters in this episode</string>
+    <string name="total_appearance">Total appeared %d times</string>
+
+    <!--character labels-->
+    <string name="label_status">status</string>
+    <string name="label_species">species</string>
+    <string name="label_gender">gender</string>
+    <string name="label_origin">origin</string>
+    <string name="label_location">last location</string>
+
 </resources>
