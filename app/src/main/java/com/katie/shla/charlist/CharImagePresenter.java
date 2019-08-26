@@ -9,6 +9,8 @@ public class CharImagePresenter implements CharacterContract.ImagePresenter {
 
     @Override
     public void requestImageLoading(ImageRepository.ImageHolder target, String url) {
+        // reset image before loading starts
+        target.setImageResource(0);
         imageRepo.loadImage(target, url);
     }
 
